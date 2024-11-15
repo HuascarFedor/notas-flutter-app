@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:notas_flutter/controllers/nota_controller.dart';
+import 'package:notas_flutter/providers/nota_notifier.dart';
+import 'package:provider/provider.dart';
 import './views/nota_screen.dart';
 
 void main() {
@@ -10,8 +13,12 @@ class NotasApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: NotaScreen(),
+    return ChangeNotifierProvider(
+      create: (_) => NotaNotifier(NotaController()),
+      child: const MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: NotaScreen(),
+      ),
     );
   }
 }
