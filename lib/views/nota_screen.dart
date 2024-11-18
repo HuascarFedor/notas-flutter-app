@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:notas_flutter/providers/nota_notifier.dart';
 import 'package:provider/provider.dart';
+import '../providers/nota_notifier.dart';
+import './mixins/scroll_to_last_item_mixin.dart';
 import '../models/nota.dart';
 import './widgets/add_dialog.dart';
 import './widgets/delete_dialog.dart';
@@ -12,8 +13,17 @@ class NotaScreen extends StatefulWidget {
   State<NotaScreen> createState() => _NotasState();
 }
 
-class _NotasState extends State<NotaScreen> {
-  // final List<Nota> _notas = [];
+class _NotasState extends State<NotaScreen> with ScrollToLastItemMixin {
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  ScrollController get scrollController => _scrollController;
+
+  @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,6 +42,7 @@ class _NotasState extends State<NotaScreen> {
 
   Widget _buildList(NotaNotifier notaNotifier) {
     return ListView.builder(
+      controller: scrollController,
       itemCount: notaNotifier.notas.length,
       itemBuilder: (context, index) {
         final Nota nota = notaNotifier.notas[index];
@@ -91,6 +102,7 @@ class _NotasState extends State<NotaScreen> {
                 final notaNotifier =
                     Provider.of<NotaNotifier>(context, listen: false);
                 notaNotifier.addNota(text);
+                scrollToLastItem();
               });
         });
   }
