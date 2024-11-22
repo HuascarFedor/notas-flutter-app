@@ -5,9 +5,9 @@ class TodoRepository {
   Database? _database;
 
   Future<Database> get database async {
-    if (_database != null) return _database;
+    if (_database != null) return _database!;
     _database = await _initDB();
-    return _database;
+    return _database!;
   }
 
   Future<Database> _initDB() async {
