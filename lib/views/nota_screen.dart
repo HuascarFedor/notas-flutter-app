@@ -41,6 +41,16 @@ class _NotasState extends State<NotaScreen> with ScrollToLastItemMixin {
   }
 
   Widget _buildList(NotaNotifier notaNotifier) {
+    if (notaNotifier.isLoading) {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    }
+    if (notaNotifier.notas.isEmpty) {
+      return const Center(
+        child: Text("Aun no hay notas"),
+      );
+    }
     return ListView.builder(
       controller: scrollController,
       itemCount: notaNotifier.notas.length,
@@ -87,6 +97,10 @@ class _NotasState extends State<NotaScreen> with ScrollToLastItemMixin {
               content: "¿Está seguro de eliminar la nota?",
               onDelete: () {
                 notaNotifier.deleteNota(nota);
+                if (notaNotifier.errorMessage != null) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text(notaNotifier.errorMessage!)));
+                }
               });
         });
   }
@@ -102,6 +116,10 @@ class _NotasState extends State<NotaScreen> with ScrollToLastItemMixin {
                 final notaNotifier =
                     Provider.of<NotaNotifier>(context, listen: false);
                 notaNotifier.addNota(text);
+                if (notaNotifier.errorMessage != null) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text(notaNotifier.errorMessage!)));
+                }
                 scrollToLastItem();
               });
         });
