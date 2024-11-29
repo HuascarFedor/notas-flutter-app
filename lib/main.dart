@@ -6,8 +6,18 @@ import 'package:notas_flutter/services/nota_service.dart';
 import 'package:provider/provider.dart';
 import './views/nota_screen.dart';
 
-void main() {
-  runApp(const NotasApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final todoRepository = TodoRepository();
+  final notaService = NotaService(todoRepository);
+  final notaController = NotaController(notaService);
+
+  runApp(
+    ChangeNotifierProvider(
+      create: (_) => NotaNotifier(notaController),
+      child: const NotasApp(),
+    ),
+  );
 }
 
 class NotasApp extends StatelessWidget {
@@ -15,13 +25,16 @@ class NotasApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) =>
-          NotaNotifier(NotaController(NotaService(TodoRepository()))),
-      child: const MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: NotaScreen(),
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
       ),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => const NotaScreen(),
+        //'/details': (context) => const NotaDetailsScreen(),
+      },
     );
   }
 }

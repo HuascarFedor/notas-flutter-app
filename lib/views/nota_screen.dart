@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import '../providers/nota_notifier.dart';
 import './mixins/scroll_to_last_item_mixin.dart';
@@ -71,17 +72,49 @@ class _NotasState extends State<NotaScreen> with ScrollToLastItemMixin {
               ),
             ],
           ),
-          child: ListTile(
-            title: Text(
-              nota.content,
-              style:
-                  const TextStyle(fontWeight: FontWeight.w500, fontSize: 18.0),
-            ),
-            onTap: () => _showDeleteNotaDialog(notaNotifier, nota),
-            trailing: const IconButton(
-              icon: Icon(Icons.delete, color: Colors.redAccent),
-              onPressed: null,
-            ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Título
+              Text(
+                nota.content,
+                style: const TextStyle(
+                    fontWeight: FontWeight.w500, fontSize: 18.0),
+              ),
+              const SizedBox(height: 8.0), // Espaciado
+              // Subtítulo con la fecha
+              Text(
+                'Creado: ${DateFormat('dd/MM/yyyy HH:mm:ss').format(DateTime.parse(nota.createdAt))}',
+                style: const TextStyle(fontSize: 14.0, color: Colors.grey),
+              ),
+              const SizedBox(height: 16.0), // Espaciado adicional
+              // Acciones: Switch y Botón Eliminar
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  // Interruptor para estado de completado
+                  Row(
+                    children: [
+                      const Text(
+                        'Completado:',
+                        style: TextStyle(fontSize: 14.0, color: Colors.grey),
+                      ),
+                      Switch(
+                        value: nota.finished,
+                        onChanged: (bool value) {
+                          notaNotifier.finishedNota(nota.id!, value);
+                        },
+                      ),
+                    ],
+                  ),
+                  // Botón de eliminar
+                  IconButton(
+                    icon: const Icon(Icons.delete, color: Colors.redAccent),
+                    onPressed: () => _showDeleteNotaDialog(notaNotifier, nota),
+                  ),
+                ],
+              ),
+            ],
           ),
         );
       },

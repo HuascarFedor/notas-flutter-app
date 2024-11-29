@@ -17,4 +17,8 @@ class NotaService {
   Future<void> deleteNota(Nota nota) async {
     await _todoRepository.deleteNota(nota);
   }
+
+  Future<void> notaFinished(int id, bool value) async {
+    await _todoRepository.notaFinished(id, value);
+  }
 }

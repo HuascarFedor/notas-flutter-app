@@ -42,4 +42,17 @@ class NotaController {
       _notas.removeWhere((item) => item.id == nota.id);
     }
   }
+
+  Future<void> finishedNota(int id, bool value) async {
+    try {
+      await _notaService.notaFinished(id, value);
+    } catch (e) {
+      throw Exception("Error al finalizar la nota: $e");
+    } finally {
+      final index = _notas.indexWhere((nota) => nota.id == id);
+      if (index != -1) {
+        _notas[index].finished = !_notas[index].finished; // Cambia el valor
+      }
+    }
+  }
 }

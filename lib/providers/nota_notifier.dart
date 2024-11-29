@@ -50,4 +50,15 @@ class NotaNotifier extends ChangeNotifier {
     }
     notifyListeners();
   }
+
+  Future<void> finishedNota(int id, bool value) async {
+    try {
+      _errorMessage = null;
+      notifyListeners();
+      await _notaController.finishedNota(id, value);
+    } catch (_) {
+      _errorMessage = "Error al finalizar la nota";
+    }
+    notifyListeners();
+  }
 }
